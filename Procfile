@@ -1,0 +1,1 @@
+web: gunicorn math_problem.wsgi --log-file -
