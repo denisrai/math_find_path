@@ -1,0 +1,116 @@
+{% load staticfiles %}
+<html>
+	
+	<head>
+		
+		<style type="text/css">
+			
+			body{
+				background: url(../static/robot/images/machinarium-robot-art.jpg);
+				-webkit-background-size: cover;
+	            -moz-background-size: cover;
+	            -o-background-size: cover;
+	            background-size: cover;
+			}
+
+			p{
+				color: white;
+				font-size: 25px;
+				text-align: center;
+			}
+
+			input[type="text"] {
+				width: 63px;
+			}
+
+			input[type="submit"] {
+				margin-top: 20px;
+				float: right;
+			}
+
+			.path input {
+				background-color: green;
+				color: white;
+			}
+
+			.center-div{
+			    margin: auto;
+			    position: absolute;
+			    left: 0;
+			    top: 0;
+			    bottom: 0;
+			    right: 0;
+			    width: 400px;
+			    height: 400px;
+			}
+
+		</style>
+
+	</head>
+
+
+	<body>
+		<div class="center-div">
+			<p>
+				Find the shortest path!!
+			</p>
+
+			<form action="" method="POST" id="numbers">{% csrf_token %}
+				<table>
+					{%for x_key, x_value in matrix.items %}		
+						<tr>
+							{%for y_key, y_value in x_value.items%}
+								<td {% if y_value in result %} class="path" {% endif %}>
+									<input type="text" value="{{y_value}}" name="{{x_key}}_{{y_key}}" />
+								</td>
+							{%endfor%}
+						</tr>
+					{%endfor%}
+				</table>
+				{% if total %}
+				<br>
+				<div>
+					The total, in decimal, used to cross the field was: <b>{{total}}</b>
+				</div>
+				{% endif %}
+				<input type="submit" value="Find best path" name="submitted"/>
+			</form>
+		</div>
+
+	<script src="{% static "robot/js/jquery-1.12.1.min.js" %}"></script>
+	
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+			$("#numbers").submit(function( event ) {
+				
+				$('input[type="text"]', $(this)).each(function(){
+					var value = $(this).val();
+
+					if(value.length == 0 || !isHexValid(value)){
+						$(this).css('background-color', 'red');
+						event.preventDefault();
+					}
+				})
+			});
+		});
+
+
+		function isHexValid(str) {
+			try {
+			    yourNumber = parseInt(str, 16);
+			    if (isNaN(yourNumber)){
+			    	return false;
+			    }
+			    return true;
+			}
+			catch(err) {
+			    return false;
+			}
+		}
+
+	</script>
+
+	</body>
+
+</html>
